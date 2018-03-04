@@ -1,0 +1,42 @@
+twitteR in paRasitology: #plasmodium
+========================================================
+
+Text here
+
+```{r}
+setwd("~/Documents/workspace/R-project/TwitteR")
+
+library(twitteR)
+library(tm)
+library(wordcloud)
+library(RColorBrewer)
+library(XML)
+library(igraph)
+```
+
+
+```{r}
+## #malaria tiwtter cloud 
+
+a <- searchTwitter("#malaria", n=1000)
+tweets_df = twListToDF(a) #Convert to Data Frame
+```
+
+You can also embed plots, for example:
+
+```{r fig.width=7, fig.height=6}
+b=Corpus(VectorSource(tweets_df$text), readerControl = list(language = "eng"))
+b <- tm_map(b, tolower) #Changes case to lower case 
+b <- tm_map(b, stripWhitespace) #Strips White Space
+b <- tm_map(b, removePunctuation) #Removes Punctuation
+b <- tm_map(b, removeWords, stopwords("english")) #Removes English stopwords like 'the'
+b <- tm_map(b, removeNumbers) #Removes numbers
+inspect(b)
+tdm <- TermDocumentMatrix(b) 
+m1 <- as.matrix(tdm) 
+v1 <- sort(rowSums(m1),decreasing=TRUE)
+d4 <- data.frame(word = names(v1),freq=v1)
+wordcloud(d4$word,d4$freq, random.order=FALSE, colors=brewer.pal(8, "Dark2"))
+```
+
+Wheeha
